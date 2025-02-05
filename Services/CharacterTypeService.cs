@@ -26,7 +26,8 @@ namespace Tome.Services
                     {
                         id = f.id,
                         name = f.name,
-                        type = f.type
+                        type = f.type,
+                        required = f.required,
                     }).ToList()
                 }).ToListAsync();
         }
@@ -37,7 +38,7 @@ namespace Tome.Services
             {
                 name = dto.name,
                 universeId = universeId,
-                fields = dto.fields?.Select(f => new Field { name = f.name, type = f.type }).ToList()
+                fields = dto.fields?.Select(f => new Field { name = f.name, type = f.type, required = f.required }).ToList()
             };
 
             _context.CharacterTypes.Add(characterType);
@@ -47,7 +48,7 @@ namespace Tome.Services
             {
                 id = characterType.id,
                 name = characterType.name,
-                fields = characterType.fields.Select(f => new FieldDTO { id = f.id, name = f.name, type = f.type }).ToList()
+                fields = characterType.fields.Select(f => new FieldDTO { id = f.id, name = f.name, type = f.type, required = f.required }).ToList()
             };
         }
 

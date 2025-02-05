@@ -22,7 +22,8 @@ namespace Tome.Services
                 {
                     id = f.id,
                     name = f.name,
-                    type = f.type
+                    type = f.type,
+                    required = f.required
                 })
                 .ToListAsync();
         }
@@ -33,6 +34,7 @@ namespace Tome.Services
             {
                 name = dto.name,
                 type = dto.type,
+                required = dto.required,
                 characterTypeId = characterTypeId
             };
 
@@ -43,7 +45,8 @@ namespace Tome.Services
             {
                 id = field.id,
                 name = field.name,
-                type = field.type
+                type = field.type,
+                required = field.required
             };
         }
 
@@ -54,6 +57,7 @@ namespace Tome.Services
 
             field.name = dto.name;
             field.type = dto.type;
+            field.required = dto.required;
 
             await _context.SaveChangesAsync();
             return true;
