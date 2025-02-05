@@ -1,0 +1,9 @@
+.env
+.vs
+
+docker-compose.yml
+appsettings.json
+
+bin
+obj
+Migrations
