@@ -10,26 +10,31 @@ namespace Tome.Data
         public DbSet<Universe> Universes { get; set; }
         public DbSet<Character> Characters { get; set; }
         public DbSet<Event> Events { get; set; }
+        public DbSet<CharacterType> CharacterTypes { get; set; }
+        public DbSet<Field> Fields { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Map to lowercase table names
             modelBuilder.Entity<Universe>().ToTable("universes");
             modelBuilder.Entity<Character>().ToTable("characters");
             modelBuilder.Entity<Event>().ToTable("events");
+            modelBuilder.Entity<CharacterType>().ToTable("characterTypes");
+            modelBuilder.Entity<Field>().ToTable("fields");
 
-            // Relationships
+            // Universe -> CharacterTypes
             modelBuilder.Entity<Universe>()
-                .HasMany(u => u.characters)
-                .WithOne(c => c.universe)
-                .HasForeignKey(c => c.universeId)
+                .HasMany(u => u.characterTypes)
+                .WithOne(ct => ct.universe)
+                .HasForeignKey(ct => ct.universeId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Universe>()
-                .HasMany(u => u.events)
-                .WithOne(e => e.universe)
-                .HasForeignKey(e => e.universeId)
+            // CharacterType -> Fields
+            modelBuilder.Entity<CharacterType>()
+                .HasMany(ct => ct.fields)
+                .WithOne(f => f.characterType)
+                .HasForeignKey(f => f.characterTypeId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
+

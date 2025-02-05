@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Tome.Models
 {
@@ -12,6 +13,6 @@ namespace Tome.Models
 
         public ICollection<Character> characters { get; set; }
         public ICollection<Event> events { get; set; }
+        public ICollection<CharacterType> characterTypes { get; set; }
     }
-
 }

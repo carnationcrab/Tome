@@ -17,6 +17,9 @@ builder.Services.AddDbContext<TomeDbContext>(options =>
 builder.Services.AddScoped<UniverseService>();
 builder.Services.AddScoped<CharacterService>();
 builder.Services.AddScoped<EventService>();
+builder.Services.AddScoped<CharacterTypeService>();
+builder.Services.AddScoped<FieldService>();
+
 
 // Add CORS policy
 builder.Services.AddCors(options =>
