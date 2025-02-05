@@ -18,7 +18,21 @@ builder.Services.AddScoped<UniverseService>();
 builder.Services.AddScoped<CharacterService>();
 builder.Services.AddScoped<EventService>();
 
+// Add CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
+
+// Use CORS
+app.UseCors("AllowAll");
 
 // Middleware
 app.UseHttpsRedirection();
