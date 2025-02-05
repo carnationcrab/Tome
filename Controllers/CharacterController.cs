@@ -35,7 +35,7 @@ namespace Tome.Controllers
         public async Task<ActionResult<CharacterDTO>> CreateCharacter(Guid universeId, CreateCharacterDTO dto)
         {
             var createdCharacter = await _service.CreateCharacterAsync(universeId, dto);
-            return CreatedAtAction(nameof(GetCharacter), new { id = createdCharacter.Id }, createdCharacter);
+            return CreatedAtAction(nameof(GetCharacter), new { id = createdCharacter.id }, createdCharacter);
         }
 
         [HttpPut("{id}")]

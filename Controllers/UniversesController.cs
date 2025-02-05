@@ -35,7 +35,7 @@ namespace Tome.Controllers
         public async Task<ActionResult<UniverseDTO>> CreateUniverse(CreateUniverseDTO dto)
         {
             var createdUniverse = await _service.CreateUniverseAsync(dto);
-            return CreatedAtAction(nameof(GetUniverse), new { id = createdUniverse.Id }, createdUniverse);
+            return CreatedAtAction(nameof(GetUniverse), new { id = createdUniverse.id }, createdUniverse);
         }
 
         [HttpPut("{id}")]

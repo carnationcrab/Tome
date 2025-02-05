@@ -4,14 +4,14 @@ namespace Tome.Models
 {
     public class Universe
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public Guid id { get; set; }
+        public string name { get; set; }
+        public string description { get; set; }
+        public DateTime createdAt { get; set; } = DateTime.UtcNow;
+        public DateTime updatedAt { get; set; } = DateTime.UtcNow;
 
-        public ICollection<Character> Characters { get; set; }
-        public ICollection<Event> Events { get; set; }
+        public ICollection<Character> characters { get; set; }
+        public ICollection<Event> events { get; set; }
     }
 
 }

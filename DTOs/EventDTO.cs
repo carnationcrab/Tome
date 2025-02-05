@@ -2,11 +2,11 @@
 {
     public class EventDTO
     {
-        public Guid Id { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public DateTime Date { get; set; }
-        public Guid UniverseId { get; set; }
+        public Guid id { get; set; }
+        public string title { get; set; }
+        public string description { get; set; }
+        public DateTime date { get; set; }
+        public Guid universeId { get; set; }
     }
 
 }

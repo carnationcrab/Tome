@@ -2,9 +2,9 @@
 {
     public class CreateEventDTO
     {
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public DateTime Date { get; set; }
+        public string title { get; set; }
+        public string description { get; set; }
+        public DateTime date { get; set; }
     }
 
 }

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Reflection.Emit;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Tome.Models;
 
 namespace Tome.Data
@@ -13,21 +11,25 @@ namespace Tome.Data
         public DbSet<Character> Characters { get; set; }
         public DbSet<Event> Events { get; set; }
 
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Map to lowercase table names
+            modelBuilder.Entity<Universe>().ToTable("universes");
+            modelBuilder.Entity<Character>().ToTable("characters");
+            modelBuilder.Entity<Event>().ToTable("events");
+
+            // Relationships
             modelBuilder.Entity<Universe>()
-                .HasMany(u => u.Characters)
-                .WithOne(c => c.Universe)
-                .HasForeignKey(c => c.UniverseId)
+                .HasMany(u => u.characters)
+                .WithOne(c => c.universe)
+                .HasForeignKey(c => c.universeId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Universe>()
-                .HasMany(u => u.Events)
-                .WithOne(e => e.Universe)
-                .HasForeignKey(e => e.UniverseId)
+                .HasMany(u => u.events)
+                .WithOne(e => e.universe)
+                .HasForeignKey(e => e.universeId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }
-
-    }
+}

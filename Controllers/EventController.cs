@@ -35,7 +35,7 @@ namespace Tome.Controllers
         public async Task<ActionResult<EventDTO>> CreateEvent(Guid universeId, CreateEventDTO dto)
         {
             var createdEvent = await _service.CreateEventAsync(universeId, dto);
-            return CreatedAtAction(nameof(GetEvent), new { id = createdEvent.Id }, createdEvent);
+            return CreatedAtAction(nameof(GetEvent), new { id = createdEvent.id }, createdEvent);
         }
 
         [HttpPut("{id}")]
