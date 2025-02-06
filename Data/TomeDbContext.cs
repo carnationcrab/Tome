@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Tome.Models;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Tome.API.API.Models;
 
-namespace Tome.Data
+namespace Tome.API.API.Data
 {
-    public class TomeDbContext : DbContext
+    public class TomeDbContext : IdentityDbContext<User>
     {
         public TomeDbContext(DbContextOptions<TomeDbContext> options) : base(options) { }
 

@@ -1,10 +1,10 @@
 ﻿
  using Microsoft.EntityFrameworkCore;
- using Tome.Data;
- using Tome.DTOs;
- using Tome.Models;
+ using Tome.API.Data;
+ using Tome.API.DTOs;
+ using Tome.API.Models;
 
- namespace Tome.Services
+ namespace Tome.API.Services
 {
     public class UniverseService
     {

@@ -1,4 +1,4 @@
-﻿namespace Tome.DTOs
+﻿namespace Tome.API.API.DTOs
 {
     public class CharacterDTO
     {

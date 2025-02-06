@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Tome.DTOs;
-using Tome.Services;
+using Tome.API.DTOs;
+using Tome.API.Services;
 
-namespace Tome.Controllers
+namespace Tome.API.Controllers
 {
     [ApiController]
     [Route("api/charactertypes/{characterTypeId}/fields")]

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using Tome.Data;
-using Tome.Services;
+using Tome.API.Data;
+using Tome.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

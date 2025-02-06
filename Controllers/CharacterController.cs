@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Tome.DTOs;
-using Tome.Services;
+using Tome.API.API.DTOs;
+using Tome.API.API.Services;
 
-namespace Tome.Controllers
+namespace Tome.API.API.Controllers
 {
     [ApiController]
     [Route("api/universes/{universeId}/[controller]")]
