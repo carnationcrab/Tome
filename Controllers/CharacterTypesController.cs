@@ -16,7 +16,7 @@ namespace Tome.API.Controllers
             _characterTypeService = characterTypeService;
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet]
         public async Task<IActionResult> GetCharacterTypes(Guid universeId)
         {
@@ -24,7 +24,7 @@ namespace Tome.API.Controllers
             return Ok(types);
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPost]
         public async Task<IActionResult> CreateCharacterType(Guid universeId, [FromBody] CreateCharacterTypeDTO dto)
         {
@@ -32,7 +32,7 @@ namespace Tome.API.Controllers
             return CreatedAtAction(nameof(GetCharacterTypes), new { universeId }, createdType);
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCharacterType(Guid universeId, Guid id)
         {

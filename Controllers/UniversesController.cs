@@ -16,7 +16,7 @@ namespace Tome.API.Controllers
             _service = service;
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UniverseDTO>>> GetUniverses()
         {
@@ -24,7 +24,7 @@ namespace Tome.API.Controllers
             return Ok(universes);
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet("{id}")]
         public async Task<ActionResult<UniverseDTO>> GetUniverse(Guid id)
         {
@@ -34,7 +34,7 @@ namespace Tome.API.Controllers
             return Ok(universe);
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPost]
         public async Task<ActionResult<UniverseDTO>> CreateUniverse(CreateUniverseDTO dto)
         {
@@ -42,7 +42,7 @@ namespace Tome.API.Controllers
             return CreatedAtAction(nameof(GetUniverse), new { id = createdUniverse.id }, createdUniverse);
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUniverse(Guid id, UniverseDTO dto)
         {
@@ -52,7 +52,7 @@ namespace Tome.API.Controllers
             return NoContent();
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUniverse(Guid id)
         {
