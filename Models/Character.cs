@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Tome.API.API.Models
+namespace Tome.API.Models
 {
     public class Character
     {

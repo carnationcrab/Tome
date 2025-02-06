@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Tome.API.API.Models;
+using Tome.API..Models;
 
-namespace Tome.API.API.Data
+namespace Tome.API.Data
 {
     public class TomeDbContext : IdentityDbContext<User>
     {

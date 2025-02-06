@@ -1,7 +1,7 @@
-﻿//using Tome.API.API.DTOs;
-//using Tome.API.API.Models;
+﻿//using Tome.API.DTOs;
+//using Tome.API.Models;
 
-//namespace Tome.API.API.Services
+//namespace Tome.API.Services
 //{
 //    public class CharacterService
 //    {
@@ -86,11 +86,11 @@
 //}
 
 using Microsoft.EntityFrameworkCore;
-using Tome.API.API.Data;
-using Tome.API.API.DTOs;
-using Tome.API.API.Models;
+using Tome.API.Data;
+using Tome.API.DTOs;
+using Tome.API.Models;
 
-namespace Tome.API.API.Services
+namespace Tome.API.Services
 {
     public class CharacterService
     {

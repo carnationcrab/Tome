@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 
-namespace Tome.API.API.Models
+namespace Tome.API.Models
 {
     public class User : IdentityUser
     {
