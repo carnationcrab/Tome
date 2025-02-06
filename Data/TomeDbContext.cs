@@ -26,8 +26,19 @@ namespace Tome.API.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder); // Ensures Identity tables are created
+            
+            // TODO All this horrible lowercase remapping is unhinged.
+            // It needs to either die a firey death or be hidden in a fn
+            // so I can forgive myself.
 
-            // Identity Tables (Lowercase Mapping)
+
+            // Tables (Lowercase Mapping)
+            modelBuilder.Entity<Universe>().ToTable("universes");  // <-- FIXED
+            modelBuilder.Entity<Character>().ToTable("characters");
+            modelBuilder.Entity<Event>().ToTable("events");
+            modelBuilder.Entity<CharacterType>().ToTable("character_types");
+            modelBuilder.Entity<Field>().ToTable("fields");
+
             modelBuilder.Entity<User>().ToTable("users");
             modelBuilder.Entity<IdentityRole<Guid>>().ToTable("roles");
             modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("user_roles");

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Tome.API.DTOs;
 using Tome.API.Services;
 
@@ -15,6 +16,7 @@ namespace Tome.API.Controllers
             _characterTypeService = characterTypeService;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetCharacterTypes(Guid universeId)
         {
@@ -22,6 +24,7 @@ namespace Tome.API.Controllers
             return Ok(types);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateCharacterType(Guid universeId, [FromBody] CreateCharacterTypeDTO dto)
         {
@@ -29,6 +32,7 @@ namespace Tome.API.Controllers
             return CreatedAtAction(nameof(GetCharacterTypes), new { universeId }, createdType);
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCharacterType(Guid universeId, Guid id)
         {

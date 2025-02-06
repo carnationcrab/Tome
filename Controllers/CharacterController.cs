@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Tome.API.DTOs;
 using Tome.API.Services;
 
@@ -15,6 +16,7 @@ namespace Tome.API.Controllers
             _service = service;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CharacterDTO>>> GetCharacters(Guid universeId)
         {
@@ -22,6 +24,7 @@ namespace Tome.API.Controllers
             return Ok(characters);
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<CharacterDTO>> GetCharacter(Guid id)
         {
@@ -31,6 +34,7 @@ namespace Tome.API.Controllers
             return Ok(character);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<CharacterDTO>> CreateCharacter(Guid universeId, CreateCharacterDTO dto)
         {
@@ -38,6 +42,7 @@ namespace Tome.API.Controllers
             return CreatedAtAction(nameof(GetCharacter), new { id = createdCharacter.id }, createdCharacter);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCharacter(Guid id, UpdateCharacterDTO dto)
         {
@@ -47,7 +52,7 @@ namespace Tome.API.Controllers
             return NoContent();
         }
 
-
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCharacter(Guid id)
         {
