@@ -16,7 +16,7 @@ namespace Tome.API.Controllers
             _service = service;
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EventDTO>>> GetEvents(Guid universeId)
         {
@@ -24,7 +24,7 @@ namespace Tome.API.Controllers
             return Ok(events);
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet("{id}")]
         public async Task<ActionResult<EventDTO>> GetEvent(Guid id)
         {
@@ -34,7 +34,7 @@ namespace Tome.API.Controllers
             return Ok(evnt);
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPost]
         public async Task<ActionResult<EventDTO>> CreateEvent(Guid universeId, CreateEventDTO dto)
         {
@@ -42,7 +42,7 @@ namespace Tome.API.Controllers
             return CreatedAtAction(nameof(GetEvent), new { id = createdEvent.id }, createdEvent);
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateEvent(Guid id, UpdateEventDTO dto)
         {
@@ -52,7 +52,7 @@ namespace Tome.API.Controllers
             return NoContent();
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEvent(Guid id)
         {

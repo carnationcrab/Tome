@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Tome.API.Models;
 using Tome.API.DTOs;
-using System.Threading.Tasks;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 

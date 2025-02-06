@@ -16,7 +16,7 @@ namespace Tome.API.Controllers
             _fieldService = fieldService;
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet]
         public async Task<IActionResult> GetFields(Guid characterTypeId)
         {
@@ -24,7 +24,7 @@ namespace Tome.API.Controllers
             return Ok(fields);
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPost]
         public async Task<IActionResult> CreateField(Guid characterTypeId, [FromBody] CreateFieldDTO dto)
         {
@@ -32,7 +32,7 @@ namespace Tome.API.Controllers
             return CreatedAtAction(nameof(GetFields), new { characterTypeId }, createdField);
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateField(Guid id, [FromBody] UpdateFieldDTO dto)
         {
@@ -41,7 +41,7 @@ namespace Tome.API.Controllers
             return NoContent();
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteField(Guid id)
         {

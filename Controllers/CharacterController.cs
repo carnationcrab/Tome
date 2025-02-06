@@ -16,7 +16,7 @@ namespace Tome.API.Controllers
             _service = service;
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CharacterDTO>>> GetCharacters(Guid universeId)
         {
@@ -24,7 +24,7 @@ namespace Tome.API.Controllers
             return Ok(characters);
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet("{id}")]
         public async Task<ActionResult<CharacterDTO>> GetCharacter(Guid id)
         {
@@ -34,7 +34,7 @@ namespace Tome.API.Controllers
             return Ok(character);
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPost]
         public async Task<ActionResult<CharacterDTO>> CreateCharacter(Guid universeId, CreateCharacterDTO dto)
         {
@@ -42,7 +42,7 @@ namespace Tome.API.Controllers
             return CreatedAtAction(nameof(GetCharacter), new { id = createdCharacter.id }, createdCharacter);
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCharacter(Guid id, UpdateCharacterDTO dto)
         {
@@ -52,7 +52,7 @@ namespace Tome.API.Controllers
             return NoContent();
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCharacter(Guid id)
         {

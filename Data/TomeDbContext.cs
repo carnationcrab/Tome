@@ -36,7 +36,7 @@ namespace Tome.API.Data
             modelBuilder.Entity<Universe>().ToTable("universes");  // <-- FIXED
             modelBuilder.Entity<Character>().ToTable("characters");
             modelBuilder.Entity<Event>().ToTable("events");
-            modelBuilder.Entity<CharacterType>().ToTable("character_types");
+            modelBuilder.Entity<CharacterType>().ToTable("characterTypes");
             modelBuilder.Entity<Field>().ToTable("fields");
 
             modelBuilder.Entity<User>().ToTable("users");
