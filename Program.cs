@@ -1,44 +1,87 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using Tome.API.Data;
+using Tome.API.Models;
 using Tome.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-// builder.Services.AddSwaggerGen();
+// Load Configuration
+var configuration = builder.Configuration;
 
-// Register PostgreSQL Database Context
+// Database
 builder.Services.AddDbContext<TomeDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
-// Register services
+// Identity (User Management)
+builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
+{
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequiredLength = 8;
+})
+.AddEntityFrameworkStores<TomeDbContext>()
+.AddDefaultTokenProviders();
+
+// JWT Authentication
+var jwtKey = configuration["Jwt:Key"] ?? throw new ArgumentNullException("JWT Key is missing.");
+var jwtIssuer = configuration["Jwt:Issuer"] ?? throw new ArgumentNullException("JWT Issuer is missing.");
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.RequireHttpsMetadata = true; // Set false in dev if needed
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtIssuer,
+            ValidAudience = jwtIssuer,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+        };
+    });
+
+// Enable Authorization
+builder.Services.AddAuthorization();
+
+// Register Application Services (Dependency Injection) 
+builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<UniverseService>();
 builder.Services.AddScoped<CharacterService>();
 builder.Services.AddScoped<EventService>();
 builder.Services.AddScoped<CharacterTypeService>();
 builder.Services.AddScoped<FieldService>();
 
-
-// Add CORS policy
+// Enable Cross-Origin Requests
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", builder =>
+    options.AddPolicy("AllowAll", policy =>
     {
-        builder.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader();
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
     });
 });
 
+// Controllers
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+
 var app = builder.Build();
 
-// Use CORS
+// Middleware Pipeline
 app.UseCors("AllowAll");
-
-// Middleware
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
