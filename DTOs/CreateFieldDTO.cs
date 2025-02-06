@@ -1,4 +1,4 @@
-﻿namespace Tome.DTOs
+﻿namespace Tome.API.DTOs
 {
     public class CreateFieldDTO
     {

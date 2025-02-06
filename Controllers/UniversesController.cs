@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Tome.DTOs;
-using Tome.Services;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Tome.API.DTOs;
+using Tome.API.Services;
 
-namespace Tome.Controllers
+namespace Tome.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -15,6 +16,7 @@ namespace Tome.Controllers
             _service = service;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UniverseDTO>>> GetUniverses()
         {
@@ -22,6 +24,7 @@ namespace Tome.Controllers
             return Ok(universes);
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<UniverseDTO>> GetUniverse(Guid id)
         {
@@ -31,6 +34,7 @@ namespace Tome.Controllers
             return Ok(universe);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<UniverseDTO>> CreateUniverse(CreateUniverseDTO dto)
         {
@@ -38,6 +42,7 @@ namespace Tome.Controllers
             return CreatedAtAction(nameof(GetUniverse), new { id = createdUniverse.id }, createdUniverse);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUniverse(Guid id, UniverseDTO dto)
         {
@@ -47,6 +52,7 @@ namespace Tome.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUniverse(Guid id)
         {

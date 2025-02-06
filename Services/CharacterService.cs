@@ -1,7 +1,7 @@
-﻿//using Tome.DTOs;
-//using Tome.Models;
+﻿//using Tome.API.DTOs;
+//using Tome.API.Models;
 
-//namespace Tome.Services
+//namespace Tome.API.Services
 //{
 //    public class CharacterService
 //    {
@@ -86,11 +86,11 @@
 //}
 
 using Microsoft.EntityFrameworkCore;
-using Tome.Data;
-using Tome.DTOs;
-using Tome.Models;
+using Tome.API.Data;
+using Tome.API.DTOs;
+using Tome.API.Models;
 
-namespace Tome.Services
+namespace Tome.API.Services
 {
     public class CharacterService
     {
@@ -115,7 +115,7 @@ namespace Tome.Services
             .ToListAsync();
         }
 
-        public async Task<CharacterDTO> GetCharacterByIdAsync(Guid id)
+        public async Task<CharacterDTO?> GetCharacterByIdAsync(Guid id)
         {
             var character = await _context.Characters.FindAsync(id);
             if (character == null) return null;

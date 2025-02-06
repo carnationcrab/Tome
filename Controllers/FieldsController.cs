@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Tome.DTOs;
-using Tome.Services;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Tome.API.DTOs;
+using Tome.API.Services;
 
-namespace Tome.Controllers
+namespace Tome.API.Controllers
 {
     [ApiController]
     [Route("api/charactertypes/{characterTypeId}/fields")]
@@ -15,6 +16,7 @@ namespace Tome.Controllers
             _fieldService = fieldService;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetFields(Guid characterTypeId)
         {
@@ -22,6 +24,7 @@ namespace Tome.Controllers
             return Ok(fields);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateField(Guid characterTypeId, [FromBody] CreateFieldDTO dto)
         {
@@ -29,6 +32,7 @@ namespace Tome.Controllers
             return CreatedAtAction(nameof(GetFields), new { characterTypeId }, createdField);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateField(Guid id, [FromBody] UpdateFieldDTO dto)
         {
@@ -37,6 +41,7 @@ namespace Tome.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteField(Guid id)
         {

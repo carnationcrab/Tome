@@ -1,4 +1,4 @@
-﻿namespace Tome.Models
+﻿namespace Tome.API.Models
 {
     public class Field
     {
