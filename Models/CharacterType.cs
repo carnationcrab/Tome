@@ -24,7 +24,7 @@ namespace Tome.API.Models
         [Required]
         [Column("visibility")]
         public string visibility { get; set; } = "private"; // Default to private
+        public ICollection<CharacterTypeField> characterTypeFields { get; set; } = new List<CharacterTypeField>();
 
-        public List<Universe> universes { get; set; } = new List<Universe>();
     }
 }

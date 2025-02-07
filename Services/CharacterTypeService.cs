@@ -35,25 +35,33 @@ namespace Tome.API.Services
         }
 
 
-        public async Task<CharacterTypeDTO> CreateCharacterTypeAsync(Guid universeId, CreateCharacterTypeDTO dto)
+        public async Task<CharacterTypeDTO> CreateCharacterTypeAsync(CreateCharacterTypeDTO dto)
         {
             var characterType = new CharacterType
             {
                 name = dto.name,
-                 //universeId = universeId,
-                fields = dto.fields?.Select(f => new Field { name = f.name, type = f.type, required = f.required }).ToList()
+                visibility = dto.visibility
             };
 
             _context.CharacterTypes.Add(characterType);
             await _context.SaveChangesAsync();
 
-            return new CharacterTypeDTO
+            if (dto.fieldIds != null && dto.fieldIds.Any())
             {
-                id = characterType.id,
-                name = characterType.name,
-                fields = characterType.fields.Select(f => new FieldDTO { id = f.id, name = f.name, type = f.type, required = f.required }).ToList()
-            };
+                foreach (var fieldId in dto.fieldIds)
+                {
+                    _context.CharacterTypeFields.Add(new CharacterTypeField
+                    {
+                        characterTypeId = characterType.id,
+                        fieldId = fieldId
+                    });
+                }
+                await _context.SaveChangesAsync();
+            }
+
+            return new CharacterTypeDTO { id = characterType.id, name = characterType.name };
         }
+
 
         public async Task<bool> DeleteCharacterTypeAsync(Guid id)
         {

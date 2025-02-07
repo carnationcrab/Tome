@@ -14,13 +14,13 @@ namespace Tome.API.Models
         [Required]
         [Column("name")]
         public string name { get; set; } = string.Empty;
+        public string description { get; set; } = string.Empty;
 
         [Required]
         [Column("universe_id")]
         public Guid universeId { get; set; }
         public Universe universe { get; set; } = null!;
 
-        public string description { get; set; }
         public string attributes { get; set; }  // JSONB equivalent, PostgreSQL
 
         [Column("characterTypeId")]
@@ -28,6 +28,6 @@ namespace Tome.API.Models
 
         public CharacterType? CharacterType { get; set; }
 
-        public ICollection<FieldValue> fieldValues { get; set; }
+        public ICollection<CharacterField> fieldValues { get; set; } = new List<CharacterField>();
     }
 }

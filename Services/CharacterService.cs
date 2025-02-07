@@ -129,27 +129,59 @@ namespace Tome.API.Services
             };
         }
 
-        public async Task<CharacterDTO> CreateCharacterAsync(Guid universeId, CreateCharacterDTO dto)
+        public async Task<CharacterDTO> CreateCharacterAsync(CreateCharacterDTO dto)
         {
             var character = new Character
             {
-                universeId = universeId,
                 name = dto.name,
                 description = dto.description,
-                attributes = dto.attributes
+                universeId = dto.universeId,
+                characterTypeId = dto.characterTypeId
             };
 
             _context.Characters.Add(character);
             await _context.SaveChangesAsync();
 
-            return new CharacterDTO
+            // Assign inherited CharacterType fields
+            if (dto.characterTypeId.HasValue)
             {
-                id = character.id,
-                name = character.name,
-                description = character.description,
-                attributes = character.attributes
-            };
+                var fields = await _context.CharacterTypeFields
+                    .Where(ctf => ctf.characterTypeId == dto.characterTypeId)
+                    .Select(ctf => ctf.fieldId)
+                    .ToListAsync();
+
+                foreach (var fieldId in fields)
+                {
+                    _context.CharacterFields.Add(new CharacterField
+                    {
+                        characterId = character.id,
+                        fieldId = fieldId,
+                        value = "", // Default empty value
+                        isCustom = false
+                    });
+                }
+            }
+
+            // Assign custom fields
+            if (dto.customFields != null)
+            {
+                foreach (var customField in dto.customFields)
+                {
+                    _context.CharacterFields.Add(new CharacterField
+                    {
+                        characterId = character.id,
+                        fieldId = customField.fieldId,
+                        value = customField.value,
+                        isCustom = true
+                    });
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            return new CharacterDTO { id = character.id, name = character.name };
         }
+
 
         public async Task<bool> UpdateCharacterAsync(Guid id, UpdateCharacterDTO dto)
         {
