@@ -33,7 +33,7 @@ namespace Tome.API.Data
 
 
             // Tables (Lowercase Mapping)
-            modelBuilder.Entity<Universe>().ToTable("universes");  // <-- FIXED
+            modelBuilder.Entity<Universe>().ToTable("universes");
             modelBuilder.Entity<Character>().ToTable("characters");
             modelBuilder.Entity<Event>().ToTable("events");
             modelBuilder.Entity<CharacterType>().ToTable("characterTypes");

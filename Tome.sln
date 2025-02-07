@@ -4,8 +4,6 @@ VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tome.API", "Tome.API.csproj", "{A0F6447E-26D0-F667-4F42-936F7606D7CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tome.Frontend", "..\Tome.Frontend\Tome.Frontend.csproj", "{46130316-BA4F-4CEE-B74D-735425A861C2}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -16,10 +14,6 @@ Global
 		{A0F6447E-26D0-F667-4F42-936F7606D7CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0F6447E-26D0-F667-4F42-936F7606D7CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0F6447E-26D0-F667-4F42-936F7606D7CA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{46130316-BA4F-4CEE-B74D-735425A861C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{46130316-BA4F-4CEE-B74D-735425A861C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{46130316-BA4F-4CEE-B74D-735425A861C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{46130316-BA4F-4CEE-B74D-735425A861C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
