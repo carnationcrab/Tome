@@ -1,12 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Tome.API.DTOs;
 using Tome.API.Services;
 
 namespace Tome.API.Controllers
 {
     [ApiController]
-    [Route("api/universes/{universeId}/charactertypes")]
+    [Route("api/charactertypes")]
+    //[Route("api/universes/{universeId}/charactertypes")]
+
     public class CharacterTypesController : ControllerBase
     {
         private readonly CharacterTypeService _characterTypeService;
@@ -24,6 +27,16 @@ namespace Tome.API.Controllers
             return Ok(types);
         }
 
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetCharacterTypeById(Guid id)
+        {
+            var characterType = await _characterTypeService.GetCharacterTypeByIdAsync(id);
+            if (characterType == null)
+                return NotFound(new { message = "Character type not found" });
+
+            return Ok(characterType);
+        }
+
         [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPost]
         public async Task<IActionResult> CreateCharacterType(Guid universeId, [FromBody] CreateCharacterTypeDTO dto)
@@ -31,6 +44,7 @@ namespace Tome.API.Controllers
             var createdType = await _characterTypeService.CreateCharacterTypeAsync(universeId, dto);
             return CreatedAtAction(nameof(GetCharacterTypes), new { universeId }, createdType);
         }
+
 
         [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpDelete("{id}")]
@@ -41,5 +55,15 @@ namespace Tome.API.Controllers
             return NoContent();
         }
 
+        [Authorize(AuthenticationSchemes = "Bearer")]
+        [HttpPut("{id}/visibility")]
+        public async Task<IActionResult> UpdateVisibility(Guid universeId, Guid id, [FromBody] UpdateCharacterTypeVisibilityDTO model)
+        {
+            var success = await _characterTypeService.SetCharacterTypeVisibilityAsync(id, model.visibility);
+            if (!success)
+                return NotFound(new { message = "Character type not found or update failed." });
+
+            return Ok(new { message = "Character type visibility updated successfully." });
+        }
     }
 }

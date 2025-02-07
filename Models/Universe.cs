@@ -13,6 +13,6 @@ namespace Tome.API.Models
 
         public ICollection<Character> characters { get; set; }
         public ICollection<Event> events { get; set; }
-        public ICollection<CharacterType> characterTypes { get; set; }
+        //public ICollection<CharacterType> characterTypes { get; set; }
     }
 }
