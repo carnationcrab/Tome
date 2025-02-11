@@ -1,22 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace Tome.API.Models
 {
     public class Character
     {
-        public Guid id { get; set; }
-        public string name { get; set; }
+        [Key]
+        [Column("id")]
+        public Guid id { get; set; } = Guid.NewGuid();
 
-        public string description { get; set; }
-        public string attributes { get; set; }  // JSONB equivalent, PostgreSQL
+        [Required]
+        [Column("name")]
+        public string name { get; set; } = string.Empty;
+        public string description { get; set; } = string.Empty;
 
+        [Required]
+        [Column("universeId")]
         public Guid universeId { get; set; }
-        public Universe universe { get; set; }
+        public Universe universe { get; set; } = null!;
 
-        public Guid characterTypeId { get; set; }
-        public CharacterType characterType { get; set; }
+        // public string attributes { get; set; }  // JSONB equivalent, PostgreSQL
 
-        public ICollection<FieldValue> fieldValues { get; set; }
+        [Column("characterTypeId")]
+        public Guid? characterTypeId { get; set; } // Nullable in case the type is deleted
+
+        public CharacterType? characterType { get; set; }
+
+        public ICollection<CharacterField> characterFields { get; set; } = new List<CharacterField>();
     }
 }

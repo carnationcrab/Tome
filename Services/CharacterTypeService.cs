@@ -14,41 +14,68 @@ namespace Tome.API.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<CharacterTypeDTO>> GetCharacterTypesByUniverseIdAsync(Guid universeId)
+        public async Task<CharacterType?> GetCharacterTypeByIdAsync(Guid id)
         {
             return await _context.CharacterTypes
-                .Where(ct => ct.universeId == universeId)
-                .Select(ct => new CharacterTypeDTO
-                {
-                    id = ct.id,
-                    name = ct.name,
-                    fields = ct.fields.Select(f => new FieldDTO
-                    {
-                        id = f.id,
-                        name = f.name,
-                        type = f.type,
-                        required = f.required,
-                    }).ToList()
-                }).ToListAsync();
+                .Include(ct => ct.characterTypeFields)
+                .FirstOrDefaultAsync(ct => ct.id == id);
         }
 
-        public async Task<CharacterTypeDTO> CreateCharacterTypeAsync(Guid universeId, CreateCharacterTypeDTO dto)
+        public async Task<List<CharacterType>> GetCharacterTypesByUniverseIdAsync(Guid universeId)
+        {
+            var characterTypeIds = await _context.UniverseCharacterTypes
+                .Where(uct => uct.universeId == universeId)
+                .Select(uct => uct.characterTypeId)
+                .ToListAsync();
+
+            return await _context.CharacterTypes
+                .Where(ct => ct.visibility == "public" || characterTypeIds.Contains(ct.id))
+                .ToListAsync();
+        }
+
+
+        public async Task<CharacterTypeDTO> CreateCharacterTypeAsync(CreateCharacterTypeDTO dto)
         {
             var characterType = new CharacterType
             {
                 name = dto.name,
-                universeId = universeId,
-                fields = dto.fields?.Select(f => new Field { name = f.name, type = f.type, required = f.required }).ToList()
+                visibility = dto.visibility
             };
 
             _context.CharacterTypes.Add(characterType);
             await _context.SaveChangesAsync();
 
+            if (dto.fieldIds != null && dto.fieldIds.Any())
+            {
+                // Validate field IDs exist before linking
+                var validFields = await _context.Fields
+                    .Where(f => dto.fieldIds.Contains(f.id))
+                    .Select(f => f.id)
+                    .ToListAsync();
+
+                foreach (var fieldId in validFields)
+                {
+                    _context.CharacterTypeFields.Add(new CharacterTypeField
+                    {
+                        characterTypeId = characterType.id,
+                        fieldId = fieldId
+                    });
+                }
+                await _context.SaveChangesAsync();
+            }
+
             return new CharacterTypeDTO
             {
                 id = characterType.id,
                 name = characterType.name,
-                fields = characterType.fields.Select(f => new FieldDTO { id = f.id, name = f.name, type = f.type, required = f.required }).ToList()
+                visibility = characterType.visibility,
+                fields = await _context.CharacterTypeFields
+                    .Where(ctf => ctf.characterTypeId == characterType.id)
+                    .Select(ctf => new FieldDTO
+                    {
+                        id = ctf.fieldId
+                    })
+                    .ToListAsync()
             };
         }
 
@@ -61,6 +88,18 @@ namespace Tome.API.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<bool> SetCharacterTypeVisibilityAsync(Guid id, string visibility)
+        {
+            var characterType = await _context.CharacterTypes.FirstOrDefaultAsync(ct => ct.id == id);
+            if (characterType == null)
+                return false;
+
+            characterType.visibility = visibility;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
 
     }
 }

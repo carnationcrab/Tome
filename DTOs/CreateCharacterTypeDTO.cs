@@ -1,8 +1,8 @@
-﻿namespace Tome.API.DTOs
+﻿using Tome.API.DTOs;
+
+public class CreateCharacterTypeDTO
 {
-    public class CreateCharacterTypeDTO
-    {
-        public string name { get; set; }
-        public List<CreateFieldDTO>? fields { get; set; }
-    }
+    public string name { get; set; }
+    public string visibility { get; set; } = "private"; // "private", "universe", "public"
+    public List<Guid> fieldIds { get; set; } = new(); // Fields associated with this type
 }

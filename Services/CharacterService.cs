@@ -1,91 +1,4 @@
-﻿//using Tome.API.DTOs;
-//using Tome.API.Models;
-
-//namespace Tome.API.Services
-//{
-//    public class CharacterService
-//    {
-//        private static readonly List<Character> _mockCharacters = new List<Character>
-//        {
-//            new Character { Id = Guid.NewGuid(), UniverseId = Guid.NewGuid(), Name = "Mock Character 1", Description = "A temporary character.", Attributes = "{}" },
-//            new Character { Id = Guid.NewGuid(), UniverseId = Guid.NewGuid(), Name = "Mock Character 2", Description = "Another placeholder character.", Attributes = "{}" }
-//        };
-
-//        public async Task<IEnumerable<CharacterDTO>> GetCharactersByUniverseAsync(Guid universeId)
-//        {
-//            return await Task.FromResult(
-//                _mockCharacters
-//                    .Where(c => c.UniverseId == universeId)
-//                    .Select(c => new CharacterDTO
-//                    {
-//                        Id = c.Id,
-//                        Name = c.Name,
-//                        Description = c.Description,
-//                        Attributes = c.Attributes
-//                    })
-//            );
-//        }
-
-//        public async Task<CharacterDTO> GetCharacterByIdAsync(Guid id)
-//        {
-//            var character = _mockCharacters.FirstOrDefault(c => c.Id == id);
-//            if (character == null) return null;
-
-//            return await Task.FromResult(new CharacterDTO
-//            {
-//                Id = character.Id,
-//                Name = character.Name,
-//                Description = character.Description,
-//                Attributes = character.Attributes
-//            });
-//        }
-
-//        public async Task<CharacterDTO> CreateCharacterAsync(Guid universeId, CreateCharacterDTO dto)
-//        {
-//            var newCharacter = new Character
-//            {
-//                Id = Guid.NewGuid(),
-//                UniverseId = universeId,
-//                Name = dto.Name,
-//                Description = dto.Description,
-//                Attributes = dto.Attributes
-//            };
-
-//            _mockCharacters.Add(newCharacter);
-
-//            return await Task.FromResult(new CharacterDTO
-//            {
-//                Id = newCharacter.Id,
-//                Name = newCharacter.Name,
-//                Description = newCharacter.Description,
-//                Attributes = newCharacter.Attributes
-//            });
-//        }
-
-//        public async Task<bool> UpdateCharacterAsync(Guid id, UpdateCharacterDTO dto)
-//        {
-//            var character = _mockCharacters.FirstOrDefault(c => c.Id == id);
-//            if (character == null) return await Task.FromResult(false);
-
-//            character.Name = dto.Name;
-//            character.Description = dto.Description;
-//            character.Attributes = dto.Attributes;
-
-//            return await Task.FromResult(true);
-//        }
-
-//        public async Task<bool> DeleteCharacterAsync(Guid id)
-//        {
-//            var character = _mockCharacters.FirstOrDefault(c => c.Id == id);
-//            if (character == null) return await Task.FromResult(false);
-
-//            _mockCharacters.Remove(character);
-//            return await Task.FromResult(true);
-//        }
-//    }
-//}
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Tome.API.Data;
 using Tome.API.DTOs;
 using Tome.API.Models;
@@ -101,6 +14,9 @@ namespace Tome.API.Services
             _context = context;
         }
 
+        /// <summary>
+        /// Retrieves all characters within a given universe.
+        /// </summary>
         public async Task<IEnumerable<CharacterDTO>> GetCharactersByUniverseAsync(Guid universeId)
         {
             return await _context.Characters
@@ -110,14 +26,30 @@ namespace Tome.API.Services
                     id = c.id,
                     name = c.name,
                     description = c.description,
-                    attributes = c.attributes
+                    characterTypeId = c.characterTypeId,
+                    fields = _context.CharacterFields
+                        .Where(cf => cf.characterId == c.id)
+                        .Select(cf => new CharacterFieldDTO
+                        {
+                            id = cf.fieldId,
+                            name = cf.field.name,
+                            value = cf.value,
+                            isCustom = cf.isCustom,
+                            visibility = cf.visibility
+                        }).ToList()
                 })
-            .ToListAsync();
+                .ToListAsync();
         }
 
+        /// <summary>
+        /// Retrieves a specific character by ID, including its fields.
+        /// </summary>
         public async Task<CharacterDTO?> GetCharacterByIdAsync(Guid id)
         {
-            var character = await _context.Characters.FindAsync(id);
+            var character = await _context.Characters
+                .Include(c => c.characterType)
+                .FirstOrDefaultAsync(c => c.id == id);
+
             if (character == null) return null;
 
             return new CharacterDTO
@@ -125,32 +57,83 @@ namespace Tome.API.Services
                 id = character.id,
                 name = character.name,
                 description = character.description,
-                attributes = character.attributes
+                characterTypeId = character.characterTypeId,
+                fields = await GetCharacterFieldsAsync(character.id)
             };
         }
 
-        public async Task<CharacterDTO> CreateCharacterAsync(Guid universeId, CreateCharacterDTO dto)
+        /// <summary>
+        /// Creates a new character, inheriting fields from CharacterType and allowing custom fields.
+        /// </summary>
+public async Task<CharacterDTO> CreateCharacterAsync(Guid universe_Id, CreateCharacterDTO dto)
+{
+    // Ensure the universe exists
+    var universeExists = await _context.Universes.AnyAsync(u => u.id == universe_Id);
+    if (!universeExists)
+    {
+        throw new Exception($"Universe with ID {universe_Id} does not exist.");
+    }
+
+    var character = new Character
+    {
+        id = Guid.NewGuid(),
+        name = dto.name,
+        description = dto.description,
+        universeId = universe_Id,
+        characterTypeId = dto.characterTypeId
+    };
+
+    _context.Characters.Add(character);
+    await _context.SaveChangesAsync();
+
+    // Fetch inherited fields from the CharacterType
+    if (dto.characterTypeId.HasValue)
+    {
+        var inheritedFields = await _context.CharacterTypeFields
+            .Where(ctf => ctf.characterTypeId == dto.characterTypeId)
+            .Select(ctf => new CharacterField
+            {
+                characterId = character.id,
+                fieldId = ctf.fieldId,
+                value = "", // Default empty value
+                isCustom = false,
+                visibility = "universe"
+            })
+            .ToListAsync();
+
+        _context.CharacterFields.AddRange(inheritedFields);
+    }
+
+    // Add custom fields if any
+    if (dto.customFields != null)
+    {
+        foreach (var customField in dto.customFields)
         {
-            var character = new Character
+            _context.CharacterFields.Add(new CharacterField
             {
-                universeId = universeId,
-                name = dto.name,
-                description = dto.description,
-                attributes = dto.attributes
-            };
-
-            _context.Characters.Add(character);
-            await _context.SaveChangesAsync();
-
-            return new CharacterDTO
-            {
-                id = character.id,
-                name = character.name,
-                description = character.description,
-                attributes = character.attributes
-            };
+                characterId = character.id,
+                fieldId = customField.fieldId,
+                value = customField.value,
+                isCustom = true,
+                visibility = customField.visibility
+            });
         }
+    }
 
+    await _context.SaveChangesAsync();
+
+    return new CharacterDTO
+    {
+        id = character.id,
+        name = character.name,
+        description = character.description,
+        characterTypeId = character.characterTypeId
+    };
+}
+
+        /// <summary>
+        /// Updates a character's details and custom fields.
+        /// </summary>
         public async Task<bool> UpdateCharacterAsync(Guid id, UpdateCharacterDTO dto)
         {
             var character = await _context.Characters.FindAsync(id);
@@ -158,21 +141,74 @@ namespace Tome.API.Services
 
             character.name = dto.name;
             character.description = dto.description;
-            character.attributes = dto.attributes;
+
+            await _context.SaveChangesAsync();
+
+            // Update custom fields
+            if (dto.customFields != null)
+            {
+                foreach (var updatedField in dto.customFields)
+                {
+                    var fieldEntry = await _context.CharacterFields
+                        .FirstOrDefaultAsync(cf => cf.characterId == id && cf.fieldId == updatedField.fieldId && cf.isCustom);
+
+                    if (fieldEntry != null)
+                    {
+                        fieldEntry.value = updatedField.value;
+                        fieldEntry.visibility = updatedField.visibility;
+                    }
+                    else
+                    {
+                        // Add new custom field if it doesn't exist
+                        _context.CharacterFields.Add(new CharacterField
+                        {
+                            characterId = id,
+                            fieldId = updatedField.fieldId,
+                            value = updatedField.value,
+                            isCustom = true,
+                            visibility = updatedField.visibility
+                        });
+                    }
+                }
+            }
 
             await _context.SaveChangesAsync();
             return true;
         }
 
+        /// <summary>
+        /// Deletes a character and removes all its associated fields.
+        /// </summary>
         public async Task<bool> DeleteCharacterAsync(Guid id)
         {
             var character = await _context.Characters.FindAsync(id);
             if (character == null) return false;
 
+            // Delete associated CharacterFields first
+            var characterFields = _context.CharacterFields.Where(cf => cf.characterId == id);
+            _context.CharacterFields.RemoveRange(characterFields);
+
             _context.Characters.Remove(character);
             await _context.SaveChangesAsync();
             return true;
         }
-    }
 
+        /// <summary>
+        /// Retrieves all fields (inherited and custom) for a character.
+        /// </summary>
+        private async Task<List<CharacterFieldDTO>> GetCharacterFieldsAsync(Guid characterId)
+        {
+            return await _context.CharacterFields
+                .Where(cf => cf.characterId == characterId)
+                .Select(cf => new CharacterFieldDTO
+                {
+                    id = cf.fieldId,
+                    name = cf.field.name,
+                    value = cf.value,
+                    isCustom = cf.isCustom,
+                    visibility = cf.visibility
+                })
+                .ToListAsync();
+        }
+    }
 }

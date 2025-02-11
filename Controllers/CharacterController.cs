@@ -39,7 +39,8 @@ namespace Tome.API.Controllers
         public async Task<ActionResult<CharacterDTO>> CreateCharacter(Guid universeId, CreateCharacterDTO dto)
         {
             var createdCharacter = await _service.CreateCharacterAsync(universeId, dto);
-            return CreatedAtAction(nameof(GetCharacter), new { id = createdCharacter.id }, createdCharacter);
+            //return CreatedAtAction(nameof(GetCharacter), new { universeId, id = createdCharacter.id }, createdCharacter);
+            return StatusCode(201, createdCharacter);
         }
 
         [Authorize(AuthenticationSchemes = "Bearer")]

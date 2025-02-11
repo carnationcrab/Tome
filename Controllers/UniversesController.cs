@@ -43,6 +43,16 @@ namespace Tome.API.Controllers
         }
 
         [Authorize(AuthenticationSchemes = "Bearer")]
+        [HttpPost("{id}/charactertypes")]
+        public async Task<IActionResult> AddCharacterTypeToUniverse(Guid universeId, [FromBody] AddCharacterTypeToUniverseDTO dto)
+        {
+            var success = await _service.AddCharacterTypeToUniverseAsync(universeId, dto.characterTypeId);
+            if (!success) return NotFound(new { message = "Universe or Character Type not found, or Character Type is not private." });
+
+            return Ok(new { message = "Character type successfully added to universe." });
+        }
+
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUniverse(Guid id, UniverseDTO dto)
         {
