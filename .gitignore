@@ -4,6 +4,7 @@
 docker-compose.yml
 appsettings.json
 appsettings.Development.json
+API.md
 
 bin
 obj
