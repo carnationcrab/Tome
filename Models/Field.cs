@@ -1,13 +1,29 @@
-﻿namespace Tome.API.Models
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Tome.API.Models
 {
+    [Table("fields")] // Ensure correct mapping to DB table
     public class Field
     {
-        public Guid id { get; set; }
-        public string name { get; set; }           // e.g., "Strength", "Dexterity"
-        public string type { get; set; }           // e.g., "text", "number", "dropdown"
-        public bool required { get; set; }
+        [Key]
+        [Column("id")]
+        public Guid id { get; set; } = Guid.NewGuid();
 
-        public Guid? characterTypeId { get; set; }  // Foreign Key
-        public CharacterType? characterType { get; set; }
+        [Required]
+        [Column("name")]
+        public string name { get; set; } = string.Empty;
+
+        [Column("type")]
+        public string type { get; set; } = "string"; // Example: string, int, boolean
+
+        [Column("required")]
+        public bool required { get; set; } = false;
+
+        public ICollection<CharacterTypeField> characterTypeFields { get; set; } = new List<CharacterTypeField>();
+        public ICollection<CharacterField> characterFields { get; set; } = new List<CharacterField>();
+
     }
 }

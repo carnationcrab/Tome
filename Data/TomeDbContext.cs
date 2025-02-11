@@ -23,6 +23,10 @@ namespace Tome.API.Data
         public DbSet<CharacterType> CharacterTypes { get; set; }
         public DbSet<Field> Fields { get; set; }
         public DbSet<UniverseCharacterType> UniverseCharacterTypes { get; set; }
+        public DbSet<CharacterField> CharacterFields { get; set; }
+        public DbSet<CharacterTypeField> CharacterTypeFields { get; set; }
+
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -43,6 +47,9 @@ namespace Tome.API.Data
             modelBuilder.Entity<UniverseCharacterType>()
                .ToTable("universe_characterTypes")
                .HasKey(uct => new { uct.universeId, uct.characterTypeId });
+            modelBuilder.Entity<CharacterTypeField>()
+                .ToTable("characterTypeFields")
+                .HasKey(ctf => new { ctf.characterTypeId, ctf.fieldId });
 
             modelBuilder.Entity<User>().ToTable("users");
             modelBuilder.Entity<IdentityRole<Guid>>().ToTable("roles");
@@ -99,6 +106,36 @@ namespace Tome.API.Data
             modelBuilder.Entity<IdentityUserToken<Guid>>().Property(ut => ut.LoginProvider).HasColumnName("login_provider");
             modelBuilder.Entity<IdentityUserToken<Guid>>().Property(ut => ut.Name).HasColumnName("name");
 
+            // CharacterType <-> Field
+            modelBuilder.Entity<CharacterTypeField>()
+                .HasOne(ctf => ctf.characterType)
+                .WithMany(ct => ct.characterTypeFields)
+                .HasForeignKey(ctf => ctf.characterTypeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CharacterTypeField>()
+                .HasOne(ctf => ctf.field)
+                .WithMany(f => f.characterTypeFields)
+                .HasForeignKey(ctf => ctf.fieldId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CharacterField>()
+                .ToTable("characterFields")
+                .HasKey(cf => cf.id);
+
+            modelBuilder.Entity<CharacterField>()
+                .HasOne(cf => cf.character)
+                .WithMany(c => c.characterFields)
+                .HasForeignKey(cf => cf.characterId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CharacterField>()
+                .HasOne(cf => cf.field)
+                .WithMany(f => f.characterFields) // ✅ Ensure this exists
+                .HasForeignKey(cf => cf.fieldId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
             // Universe <-> CharacterTypes
             modelBuilder.Entity<UniverseCharacterType>()
                 .HasOne(uct => uct.universe)
@@ -122,11 +159,11 @@ namespace Tome.API.Data
             //    );
             
             // CharacterType -> Fields
-            modelBuilder.Entity<CharacterType>()
-                .HasMany(ct => ct.fields)
-                .WithOne(f => f.characterType)
-                .HasForeignKey(f => f.characterTypeId)
-                .OnDelete(DeleteBehavior.Cascade);
+            //modelBuilder.Entity<CharacterType>()
+            //    .HasMany(ct => ct.fields)
+            //    .WithOne(f => f.characterType)
+            //    .HasForeignKey(f => f.characterTypeId)
+            //    .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

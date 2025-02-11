@@ -41,7 +41,7 @@ namespace Tome.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCharacterType(Guid universeId, [FromBody] CreateCharacterTypeDTO dto)
         {
-            var createdType = await _characterTypeService.CreateCharacterTypeAsync(universeId, dto);
+            var createdType = await _characterTypeService.CreateCharacterTypeAsync(dto);
             return CreatedAtAction(nameof(GetCharacterTypes), new { universeId }, createdType);
         }
 

@@ -11,7 +11,7 @@ public class CharacterField
     public Field field { get; set; } = null!;
 
     public string value { get; set; } = string.Empty;
-    public bool isCustom { get; set; } = false; // Indicates if the field is custom
+    public bool isCustom { get; set; } = false;
 
     public string visibility { get; set; } = "private";
 }

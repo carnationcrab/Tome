@@ -17,17 +17,17 @@ namespace Tome.API.Models
         public string description { get; set; } = string.Empty;
 
         [Required]
-        [Column("universe_id")]
+        [Column("universeId")]
         public Guid universeId { get; set; }
         public Universe universe { get; set; } = null!;
 
-        public string attributes { get; set; }  // JSONB equivalent, PostgreSQL
+        // public string attributes { get; set; }  // JSONB equivalent, PostgreSQL
 
         [Column("characterTypeId")]
-        public Guid? CharacterTypeId { get; set; } // Nullable in case the type is deleted
+        public Guid? characterTypeId { get; set; } // Nullable in case the type is deleted
 
-        public CharacterType? CharacterType { get; set; }
+        public CharacterType? characterType { get; set; }
 
-        public ICollection<CharacterField> fieldValues { get; set; } = new List<CharacterField>();
+        public ICollection<CharacterField> characterFields { get; set; } = new List<CharacterField>();
     }
 }

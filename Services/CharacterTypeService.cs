@@ -17,10 +17,9 @@ namespace Tome.API.Services
         public async Task<CharacterType?> GetCharacterTypeByIdAsync(Guid id)
         {
             return await _context.CharacterTypes
-                .Include(ct => ct.fields) // Include fields if relevant
+                .Include(ct => ct.characterTypeFields)
                 .FirstOrDefaultAsync(ct => ct.id == id);
         }
-
 
         public async Task<List<CharacterType>> GetCharacterTypesByUniverseIdAsync(Guid universeId)
         {
@@ -48,7 +47,13 @@ namespace Tome.API.Services
 
             if (dto.fieldIds != null && dto.fieldIds.Any())
             {
-                foreach (var fieldId in dto.fieldIds)
+                // Validate field IDs exist before linking
+                var validFields = await _context.Fields
+                    .Where(f => dto.fieldIds.Contains(f.id))
+                    .Select(f => f.id)
+                    .ToListAsync();
+
+                foreach (var fieldId in validFields)
                 {
                     _context.CharacterTypeFields.Add(new CharacterTypeField
                     {
@@ -59,9 +64,20 @@ namespace Tome.API.Services
                 await _context.SaveChangesAsync();
             }
 
-            return new CharacterTypeDTO { id = characterType.id, name = characterType.name };
+            return new CharacterTypeDTO
+            {
+                id = characterType.id,
+                name = characterType.name,
+                visibility = characterType.visibility,
+                fields = await _context.CharacterTypeFields
+                    .Where(ctf => ctf.characterTypeId == characterType.id)
+                    .Select(ctf => new FieldDTO
+                    {
+                        id = ctf.fieldId
+                    })
+                    .ToListAsync()
+            };
         }
-
 
         public async Task<bool> DeleteCharacterTypeAsync(Guid id)
         {

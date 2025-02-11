@@ -1,6 +1,9 @@
-﻿public class CreateCharacterFieldDTO
+﻿namespace Tome.API.DTOs
 {
-    public Guid fieldId { get; set; } // Reference to existing Field
-    public string value { get; set; }
-    public string visibility { get; set; } = "private"; // "private", "universe", "public"
+    public class CreateCharacterFieldDTO
+    {
+        public Guid fieldId { get; set; } // Field being added
+        public string value { get; set; } // Initial field value
+        public string visibility { get; set; } // Visibility setting
+    }
 }

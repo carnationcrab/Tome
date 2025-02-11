@@ -18,13 +18,14 @@ namespace Tome.API.Models
         //public Guid universeId { get; set; }
         //public Universe? universe { get; set; }
 
-        public ICollection<Field>? fields { get; set; }
-        public ICollection<Character>? characters { get; set; }
+        public ICollection<CharacterTypeField> characterTypeFields { get; set; } = new List<CharacterTypeField>();
+
+        // Many-to-One relationship with Characters
+        public ICollection<Character> characters { get; set; } = new List<Character>();
 
         [Required]
         [Column("visibility")]
         public string visibility { get; set; } = "private"; // Default to private
-        public ICollection<CharacterTypeField> characterTypeFields { get; set; } = new List<CharacterTypeField>();
 
     }
 }
