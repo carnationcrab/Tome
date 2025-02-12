@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Tome.API.Models
+﻿namespace Tome.API.Models
 {
     public class FieldValue
     {

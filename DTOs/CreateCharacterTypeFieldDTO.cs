@@ -1,4 +1,7 @@
-﻿public class CreateCharacterTypeFieldDTO
+﻿namespace Tome.API.DTOs
 {
-    public Guid fieldId { get; set; }
+    public class CreateCharacterTypeFieldDTO
+    {
+        public Guid fieldId { get; set; }
+    }
 }

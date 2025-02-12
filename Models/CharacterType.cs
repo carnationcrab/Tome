@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
 namespace Tome.API.Models
@@ -26,6 +24,8 @@ namespace Tome.API.Models
         [Required]
         [Column("visibility")]
         public string visibility { get; set; } = "private"; // Default to private
+
+        public ICollection<ModifierAssignment>? modifierAssignments { get; set; }
 
     }
 }

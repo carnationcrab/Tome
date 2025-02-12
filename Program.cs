@@ -60,6 +60,9 @@ builder.Services.AddScoped<CharacterService>();
 builder.Services.AddScoped<EventService>();
 builder.Services.AddScoped<CharacterTypeService>();
 builder.Services.AddScoped<FieldService>();
+builder.Services.AddScoped<ItemService>();
+builder.Services.AddScoped<ModifierService>();
+builder.Services.AddScoped<ModifierAssignmentService>();
 
 // Enable Cross-Origin Requests
 builder.Services.AddCors(options =>

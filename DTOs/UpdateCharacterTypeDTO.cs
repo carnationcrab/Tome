@@ -1,5 +1,8 @@
-﻿public class UpdateCharacterTypeDTO
+﻿namespace Tome.API.DTOs
 {
-    public string name { get; set; }
-    public string visibility { get; set; }
+    public class UpdateCharacterTypeDTO
+    {
+        public string name { get; set; }
+        public string visibility { get; set; }
+    }
 }

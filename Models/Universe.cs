@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Tome.API.Models
+﻿namespace Tome.API.Models
 {
     public class Universe
     {
