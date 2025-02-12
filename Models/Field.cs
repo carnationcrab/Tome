@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Tome.API.Models
@@ -24,6 +22,7 @@ namespace Tome.API.Models
 
         public ICollection<CharacterTypeField> characterTypeFields { get; set; } = new List<CharacterTypeField>();
         public ICollection<CharacterField> characterFields { get; set; } = new List<CharacterField>();
+        public ICollection<ModifierAssignment>? modifierAssignments { get; set; }
 
     }
 }

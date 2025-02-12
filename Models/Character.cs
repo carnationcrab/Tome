@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;;
 
 namespace Tome.API.Models
 {
@@ -20,14 +20,18 @@ namespace Tome.API.Models
         [Column("universeId")]
         public Guid universeId { get; set; }
         public Universe universe { get; set; } = null!;
-
-        // public string attributes { get; set; }  // JSONB equivalent, PostgreSQL
-
         [Column("characterTypeId")]
         public Guid? characterTypeId { get; set; } // Nullable in case the type is deleted
 
         public CharacterType? characterType { get; set; }
 
-        public ICollection<CharacterField> characterFields { get; set; } = new List<CharacterField>();
+        // Characters can own multiple items
+        public ICollection<CharacterItem>? characterItems { get; set; } = new List<CharacterItem>();
+
+        // Characters can have modifiers applied
+        public ICollection<ModifierAssignment>? ModifierAssignments { get; set; } = new List<ModifierAssignment>();
+
+        // Characters can have custom fields
+        public ICollection<CharacterField>? characterFields { get; set; } = new List<CharacterField>();
     }
 }

@@ -1,4 +1,7 @@
-﻿public class AssignFieldDTO
+﻿namespace Tome.API.DTOs
 {
-    public Guid fieldId { get; set; }
+    public class AssignFieldDTO
+    {
+        public Guid fieldId { get; set; }
+    }
 }

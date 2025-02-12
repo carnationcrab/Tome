@@ -25,7 +25,9 @@ namespace Tome.API.Data
         public DbSet<UniverseCharacterType> UniverseCharacterTypes { get; set; }
         public DbSet<CharacterField> CharacterFields { get; set; }
         public DbSet<CharacterTypeField> CharacterTypeFields { get; set; }
-
+        public DbSet<Modifier> Modifiers { get; set; }
+        public DbSet<ModifierAssignment> ModifierAssignments { get; set; }
+        public DbSet<Item> Items { get; set; }
 
 
 
@@ -50,6 +52,9 @@ namespace Tome.API.Data
             modelBuilder.Entity<CharacterTypeField>()
                 .ToTable("characterTypeFields")
                 .HasKey(ctf => new { ctf.characterTypeId, ctf.fieldId });
+            modelBuilder.Entity<Modifier>().ToTable("modifiers");
+            modelBuilder.Entity<ModifierAssignment>().ToTable("modifier_assignments");
+            modelBuilder.Entity<Item>().ToTable("items");
 
             modelBuilder.Entity<User>().ToTable("users");
             modelBuilder.Entity<IdentityRole<Guid>>().ToTable("roles");
@@ -148,6 +153,42 @@ namespace Tome.API.Data
                 .WithMany()
                 .HasForeignKey(uct => uct.characterTypeId)
                 .OnDelete(DeleteBehavior.Cascade);
+            
+            // Modifier <-> ModifierAssignment
+            modelBuilder.Entity<ModifierAssignment>()
+                .HasOne(ma => ma.modifier)
+                .WithMany(m => m.assignments)
+                .HasForeignKey(ma => ma.modifierId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Character <-> ModifierAssignment
+            modelBuilder.Entity<ModifierAssignment>()
+                .HasOne(ma => ma.character)
+                .WithMany(c => c.ModifierAssignments)
+                .HasForeignKey(ma => ma.characterId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // CharacterType <-> ModifierAssignment
+            modelBuilder.Entity<ModifierAssignment>()
+                .HasOne(ma => ma.characterType)
+                .WithMany(ct => ct.modifierAssignments)
+                .HasForeignKey(ma => ma.characterTypeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Item <-> ModifierAssignment
+            modelBuilder.Entity<ModifierAssignment>()
+                .HasOne(ma => ma.item)
+                .WithMany(i => i.ModifierAssignments)
+                .HasForeignKey(ma => ma.itemId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Field <-> ModifierAssignment
+            modelBuilder.Entity<ModifierAssignment>()
+                .HasOne(ma => ma.field)
+                .WithMany(f => f.modifierAssignments)
+                .HasForeignKey(ma => ma.fieldId)
+                .OnDelete(DeleteBehavior.Cascade);
+
 
             //modelBuilder.Entity<Universe>()
             //    .HasMany(u => u.characterTypes)
@@ -157,7 +198,7 @@ namespace Tome.API.Data
             //        j => j.HasOne<CharacterType>().WithMany().HasForeignKey("character_type_id"),
             //        j => j.HasOne<Universe>().WithMany().HasForeignKey("universe_id")
             //    );
-            
+
             // CharacterType -> Fields
             //modelBuilder.Entity<CharacterType>()
             //    .HasMany(ct => ct.fields)
