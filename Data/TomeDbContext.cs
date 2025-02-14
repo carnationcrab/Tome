@@ -136,7 +136,7 @@ namespace Tome.API.Data
 
             modelBuilder.Entity<CharacterField>()
                 .HasOne(cf => cf.field)
-                .WithMany(f => f.characterFields) // ✅ Ensure this exists
+                .WithMany(f => f.characterFields)
                 .HasForeignKey(cf => cf.fieldId)
                 .OnDelete(DeleteBehavior.Cascade);
 
