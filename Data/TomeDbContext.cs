@@ -33,7 +33,7 @@ namespace Tome.API.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder); // Ensures Identity tables are created
+            base.OnModelCreating(modelBuilder);
             
             // TODO All this horrible lowercase remapping is unhinged.
             // It needs to either die a firey death or be hidden in a fn
